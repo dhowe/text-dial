@@ -10,42 +10,46 @@
 <body translate="no">
   <ul class="cylinder" id="content"></ul>
   <script>
-    let all = ["The", "act", "of", "weaving", "became", "making", "the", "device", "to", "weave", "onto", "and", "then", "warping", "the", "loom,", "which", "is", "a", "very", "long", "intensive", "practice.", "And", "then", "I", "didn't", "want", "to", "go", "out", "and", "buy", "yarn,", "first", "of", "all", "because", "I", "didn't", "want", "to", "spend", "all", "that", "money,", "but", "also", "I'm", "really", "big", "into", "contemplating", "waste", "culture,", "especially", "in", "material", "in", "the", "arts.", "And", "in", "a", "way", "that's", "not", "like", "taking", "something", "off", "the", "street", "and", "using", "it,", "but", "kind", "of", "seeing", "what", "is", "wasted", "in", "this", "studio", "or", "what", "is", "wasted", "amongst", "my", "peers.", "And", "so", "I", "was", "collecting", "all", "these"];
-    let numItems = 7, cursor = 0;  
-    revolve();
+    const all = ["The", "act", "of", "weaving", "became", "making", "the", "device", "to", "weave", "onto", "and", "then", "warping", "the", "loom,", "which", "is", "a", "very", "long", "intensive", "practice.", "And", "then", "I", "didn't", "want", "to", "go", "out", "and", "buy", "yarn,", "first", "of", "all", "because", "I", "didn't", "want", "to", "spend", "all", "that", "money,", "but", "also", "I'm", "really", "big", "into", "contemplating", "waste", "culture,", "especially", "in", "material", "in", "the", "arts.", "And", "in", "a", "way", "that's", "not", "like", "taking", "something", "off", "the", "street", "and", "using", "it,", "but", "kind", "of", "seeing", "what", "is", "wasted", "in", "this", "studio", "or", "what", "is", "wasted", "amongst", "my", "peers.", "And", "so", "I", "was", "collecting", "all", "these"];
+    const content = document.getElementById('content');
+    
+    const numItems = 9, maxAngle = 60, delay = 1000;
 
-    function revolve() {
-      let words = all.slice(cursor % all.length, (cursor + numItems) % all.length);
-      layoutText('content', words);
-      setTimeout(revolve, 1000);
-      cursor++;
+    revolve({element: content, cursor: 7, delay }); // start
+
+    function revolve(opts) {
+      let curs = opts.cursor++;
+      let words = all.slice(curs % all.length, (curs + numItems) % all.length);
+      opts.element.innerHTML = layout(words, { hackEdgeMargins: 5 });
+      setTimeout(_ => revolve(opts), opts.delay);
     }
 
-    function layoutText(eleId, words) {
-
-      let html = '', maxAngle = 60;
-      let center = Math.floor(numItems / 2);
-
+    function layout(words, opts = {}) {
+      let html = '', center = Math.floor(numItems / 2);
       for (let i = 0; i < numItems; i++) {
 
+        let hem = opts.hackEdgeMargins || 0;
         let offset = i - center; // distance from center-row
         let angle = maxAngle / center * offset; // angle for row
-        let col = offset ? map(Math.abs(angle), 0, maxAngle, 50, 200) : 0;
         let marg = map(Math.abs(angle), 0, maxAngle, 0, -5); // margin-adjust?
-   
-        let style = `color: rgb(${col},${col},${col}); transform: rotateX(${angle}deg);`
-        if (offset == 0) { // center-row
-          style += ` border-top: 1px solid #E3E3E3; border-bottom: 1px solid #D5D5D5;`;
-        }
+        let bw = offset ? map(Math.abs(angle), 0, maxAngle, 50, 200) : 0;
 
+        let style = `color: rgb(${bw},${bw},${bw}); transform: rotateX(${angle}deg);`
+        if (offset == 0) style += ` border-top: 1px solid #E3E3E3; border-bottom: 1px solid #D5D5D5;`;
+
+        if (hem) {
+          if (offset == -center) style += ` margin-bottom: -${hem}px;`; // top-row
+          if (offset == center) style += ` margin-top: -${hem}px;`; // bottom-row
+        }
+        
         html += `<li style="${style}">\n`;
         html += `  <div class="word">${words[i]}</div>\n`;
         html += `</li>\n`;
       }
-      document.getElementById(eleId).innerHTML = html;
+      return html;
     }
 
-    function map(n, a, b, c, d) {
+    function map(n, a, b, c, d) { // from p5
       return (n - a) / (b - a) * (d - c) + c;
     }
   </script>
