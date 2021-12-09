@@ -1,0 +1,62 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.cylinder {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+}
+
+.cylinder li {
+  height: 20px;
+  padding: 2px 8px;
+  color: #999;
+}
+
+.xxx li:nth-child(1) {
+  margin-bottom: -5px;
+  color: #D4D4D4;
+  transform: rotateX(60deg);
+}
+
+.xxx li:nth-child(2) {
+  color: #bbb;
+  transform: rotateX(40deg);
+}
+
+.xxx li:nth-child(3) {
+  transform: rotateX(20deg);
+}
+
+.xxx li:nth-child(4) {
+  color: #333;
+  border-top: 1px solid #E3E3E3;
+  border-bottom: 1px solid #D5D5D5;
+}
+
+.xxx li:nth-child(5) {
+  transform: rotateX(-20deg);
+}
+
+.xxx li:nth-child(6) {
+  color: #bbb;
+  transform: rotateX(-40deg);
+}
+
+.xxx li:nth-child(7) {
+  margin-top: -5px;
+  color: #D4D4D4;
+  transform: rotateX(-60deg);
+}
+
+.cylinder li>div {
+  display: inline-block;
+}
+
+.cylinder li>div.word {
+  width: 80px;
+  text-align: center;
+}
